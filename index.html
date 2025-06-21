@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TempTrail™ - Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: #0f111a;
+      color: #ffffffcc;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    header {
+      text-align: center;
+    }
+    h1 {
+      font-size: 3rem;
+      color: #00e0ff;
+      text-shadow: 0 0 10px #00e0ff88;
+    }
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+    .card {
+      background: #1e2230;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 0 20px #00e0ff33;
+    }
+    .card h2 {
+      color: #00ffd0;
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    canvas {
+      width: 100%;
+      height: 200px;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #ffffff55;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌬️ TempTrail™ Dashboard — Insights
+    </h1>
+  </header>
+  <section class="dashboard">
+    <div class="card">
+      <h2>⚖️ Friction Heat Captured</h2>
+      <canvas id="heatChart"></canvas>
+    </div>
+    <div class="card">
+      <h2>⚡ Thermoelectric Conversion (kW)</h2>
+      <canvas id="conversionChart"></canvas>
+    </div>
+    <div class="card">
+      <h2>🌡 Underground Heat Reroute</h2>
+      <canvas id="rerouteChart"></canvas>
+    </div>
+    <div class="card">
+      <h2>❄ Asphalt Temp Control</h2>
+      <canvas id="asphaltChart"></canvas>
+    </div>
+  </section>
+  <footer>
+    &copy; 2025 TempTrail™. All Chaos Organized.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+  const labels = Array.from({length: 10}, (_, i) => `T+${i}s`);
+
+const charts = {};
+
+const makeChart = (id, label, color) => {
+  const ctx = document.getElementById(id);
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label,
+        data: labels.map(() => Math.random() * 100),
+        fill: true,
+        borderColor: color,
+        backgroundColor: color + '22',
+        tension: 0.4
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { labels: { color: '#fff' } }
+      },
+      scales: {
+        x: { ticks: { color: '#ccc' } },
+        y: { ticks: { color: '#ccc' } }
+      }
+    }
+  });
+  charts[id] = chart;
+  return chart;
+};
+
+makeChart('heatChart', 'Friction Heat (°C)', '#ff6b6b');
+makeChart('conversionChart', 'Energy Output (kW)', '#00ffae');
+makeChart('rerouteChart', 'Heat Rerouted (%)', '#ffaa00');
+makeChart('asphaltChart', 'Surface Temp (°C)', '#00c3ff');
+
+// Function to update data points every 1.5 seconds
+setInterval(() => {
+  Object.values(charts).forEach(chart => {
+    chart.data.datasets[0].data = chart.data.datasets[0].data.map(() => Math.random() * 100);
+    chart.update();
+  });
+}, 2500);
+
+  </script>
+</body>
+</html>
